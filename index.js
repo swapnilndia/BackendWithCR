@@ -4,6 +4,7 @@ const cors = require('cors')
 
 
 const todoRouter = require('./route/todo.route')
+const userRouter = require('./route/user.route')
 
 
 require('dotenv').config()
@@ -17,6 +18,7 @@ app.use(cors())
 const PORT = (process.env.PORT)
 
 app.use('/todo', todoRouter)
+app.use('/user', userRouter)
 
 
 
