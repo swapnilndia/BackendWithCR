@@ -31,7 +31,7 @@ exports.user_signin = async (req, res) => {
     try {
         const { email } = req.body
         const userId = req.userId
-        const secret = 'codewithckanddallaAA'
+        const secret = process.env.JWT_SECRET
         const accessToken = await jwt.sign({
             exp: Math.floor(Date.now() / 1000) + (60 * 60),
             id: userId,

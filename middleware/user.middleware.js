@@ -5,7 +5,6 @@ const bcrypt = require('bcrypt')
 async function signupMiddleware(req, res, next) {
     const { firstName, lastName, email, password } = req.body
     try {
-        console.log(firstName, lastName, email, password)
         if ([firstName, lastName, email, password].some((field) => field?.trim() === "")) {
             res.status(400).json({ msg: "All field are required" })
             // throw new ApiError(400, "All fields are required")
@@ -15,7 +14,7 @@ async function signupMiddleware(req, res, next) {
             next()
         } else {
             res.status(400).json({
-                msg: "Admin with email already exist"
+                msg: "User with email already exist"
             })
         }
     } catch (error) {
@@ -35,9 +34,11 @@ async function signinMiddleware(req, res, next) {
         const isPasswordMatching = await bcrypt.compare(password, isExistingUser.password)
         if (!isPasswordMatching) {
             res.status(401).json({ msg: 'Unauthorized' })
-        } 
-        req.userId = isExistingUser._id
-        next()
+        } else {
+            req.userId = isExistingUser._id
+            next()
+        }
+
     } catch (error) {
         console.log(error)
     }
