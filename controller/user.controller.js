@@ -13,7 +13,8 @@ exports.user_signup = async (req, res) => {
     // Implement admin signup logic
     const { firstName, lastName, email, password } = req.body
     try {
-        const saltOrRounds = 10
+        const saltOrRounds = await bcrypt.genSalt(10)
+        console.log(saltOrRounds)
         const hashedPassword = await bcrypt.hash(password, saltOrRounds,)
         const createUser = await User.create({ firstName, lastName, email, password: hashedPassword })
         if (!createUser) {
