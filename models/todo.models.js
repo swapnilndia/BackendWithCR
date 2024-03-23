@@ -1,7 +1,8 @@
 const mongoose = require('mongoose')
-const { User } = require('./user.models')
 
-mongoose.connect('mongodb+srv://CR123:CR123@backendwithcr.n3do32q.mongodb.net/');
+
+
+mongoose.connect(process.env.MONGODB_CONNECTION_STRING);
 
 const TodoSchema = new mongoose.Schema({
     title: String,
