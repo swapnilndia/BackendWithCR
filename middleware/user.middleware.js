@@ -1,26 +1,23 @@
 
 const { User } = require('../models/user.models')
 const bcrypt = require('bcrypt')
+const {signUpSchema} = require('../utils/validationSchema')
 
-async function signupMiddleware(req, res, next) {
-    const { firstName, lastName, email, password } = req.body
+
+const signupMiddleware = async (req, res, next) => {
     try {
-        if ([firstName, lastName, email, password].some((field) => field?.trim() === "")) {
-            res.status(400).json({ msg: "All field are required" })
-            // throw new ApiError(400, "All fields are required")
-        }
-        const isExistingUser = await User.findOne({ email })
-        if (!isExistingUser) {
-            next()
-        } else {
-            res.status(400).json({
-                msg: "User with email already exist"
-            })
-        }
+        await signUpSchema.validate(req.body, { abortEarly: false });
+        next();
     } catch (error) {
-        res.status(500).json({ error: error })
+        const errors = error.inner.map(err => ({
+            field: err.path,
+            message: err.message
+        }));
+        return res.status(400).json({ errors });
     }
 }
+
+
 async function signinMiddleware(req, res, next) {
     const { email, password } = req.body
     try {
