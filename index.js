@@ -7,9 +7,9 @@ require('dotenv').config()
 const todoRouter = require('./route/todo.route')
 const userRouter = require('./route/user.route')
 const expenseRouter = require('./route/expense.route')
+const studentRouter = require('./route/studentData.route')
 
 
-require('dotenv').config()
 const app = express()
 
 
@@ -22,6 +22,7 @@ const PORT = (process.env.PORT)
 app.use('/todo', todoRouter)
 app.use('/user', userRouter)
 app.use('/expense',expenseRouter )
+app.use('/studentdata',studentRouter)
 
 
 
