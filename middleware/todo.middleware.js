@@ -7,7 +7,7 @@ const { isTokenExpired } = require('../utils/helperFunction')
 const todoMiddleware = (req, res, next) => {
     try {
         const token = req.headers.authorization;
-        console.log(token)
+        
         if (!token) {
             return res.status(400).json({ msg: 'Authorization header is missing' });
         }
