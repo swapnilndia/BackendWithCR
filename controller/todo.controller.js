@@ -9,16 +9,15 @@ const jwt = require('jsonwebtoken')
 
 exports.create_todo = async (req, res) => {
     try {
-        const { title, description, completed, date } = req.body;
+        const todoBody = req.body;
         const userId = req.userId;
-        const createTodo = await Todo.create({ title, description, completed, date, createdBy: userId });
+        const createTodo = await Todo.create({ ...todoBody, createdBy: userId });
         if (createTodo) {
             return res.status(200).json({ msg: 'New todo created successfully', data: createTodo });
         } else {
             return res.status(500).json({ msg: 'Failed to create todo' });
         }
     } catch (error) {
-        console.error('Error in create_todo controller:', error);
         return res.status(500).json({ msg: 'Something went wrong' });
     }
 };

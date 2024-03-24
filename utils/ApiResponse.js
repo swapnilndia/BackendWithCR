@@ -1,9 +1,11 @@
 class ApiResponse {
-    constructor(status, data, message = 'Success') {
+    constructor(status, code = 'SUCCESS', data = null, message = 'Success', metadata = null) {
         this.status = status;
+        this.code = code;
+        this.message = message; 
         this.data = data;
-        this.message = message;
+        this.metadata = metadata;
     }
 }
 
-module.exports = ApiResponse
+module.exports = ApiResponse;

@@ -1,17 +1,10 @@
 
-const { User } = require('../models/user.models')
+
 const jwt = require('jsonwebtoken')
-const bcrypt = require('bcrypt')
+const { isTokenExpired } = require('../utils/helperFunction')
 
-function isTokenExpired(expirationTimestamp) {
-    // Get current time in UTC seconds
-    const currentTime = Math.floor(Date.now() / 1000);
-    // Check if token expiration time (in seconds) is less than current time
-    console.log(currentTime)
-    return expirationTimestamp < currentTime;
-}
 
-async function todoMiddleware(req, res, next) {
+const todoMiddleware = (req, res, next) => {
     try {
         const token = req.headers.authorization;
         console.log(token)
@@ -19,7 +12,7 @@ async function todoMiddleware(req, res, next) {
             return res.status(400).json({ msg: 'Authorization header is missing' });
         }
         const access_token = token.split(' ')[1];
-        const decodedToken = await jwt.verify(access_token, process.env.JWT_SECRET);
+        const decodedToken = jwt.verify(access_token, process.env.JWT_SECRET);
         if (!decodedToken) {
             return res.status(400).json({ msg: 'Invalid token' });
         }

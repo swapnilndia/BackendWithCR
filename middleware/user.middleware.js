@@ -1,7 +1,8 @@
 
 const { User } = require('../models/user.models')
+const ApiError = require('../utils/ApiError')
 const bcrypt = require('bcrypt')
-const {signUpSchema} = require('../utils/validationSchema')
+const { signUpSchema } = require('../utils/validationSchema')
 
 
 const signupMiddleware = async (req, res, next) => {
@@ -13,36 +14,27 @@ const signupMiddleware = async (req, res, next) => {
             field: err.path,
             message: err.message
         }));
-        return res.status(400).json({ errors });
+        return res.status(400).json(new ApiError(400, 'VALIDATION ERROR', 'one or more validation error', errors));
     }
 }
-
-
-async function signinMiddleware(req, res, next) {
-    const { email, password } = req.body
+const signInMiddleware = async (req, res, next) => {
+    const { username, password } = req.body
     try {
-        if ([email, password].some((field) => field.trim() === "")) {
-            res.status(400).json({ msg: 'email and password are required field' })
-        }
-        const isExistingUser = await User.findOne({ email })
+        const isExistingUser = await User.findOne({ username })
         if (!isExistingUser) {
-            res.status(404).json({ msg: 'User not found, kindly sign up' })
+            return res.status(404).json(new ApiError(404, 'USER NOT FOUND', 'User does not exist, Kindly sing in first'))
         }
         const isPasswordMatching = await bcrypt.compare(password, isExistingUser.password)
         if (!isPasswordMatching) {
-            res.status(401).json({ msg: 'Unauthorized' })
-        } else {
-            req.userId = isExistingUser._id
-            next()
+            return res.status(401).json(new ApiError(401, 'UNAUTHORIZED', 'Username or password does not match'))
         }
-
+        req.userId = isExistingUser._id
+        req.email = isExistingUser.email
+        req.isVerified = isExistingUser.isVerified
+        next()
     } catch (error) {
-        console.log(error)
+        return res.status(500).json(new ApiError(500, 'INTERNAL SERVER ERROR', 'Something went wrong, please try again'))
     }
-
-
-
-
 }
 
-module.exports = { signupMiddleware, signinMiddleware }
+module.exports = { signupMiddleware, signInMiddleware }
