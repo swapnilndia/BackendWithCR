@@ -18,19 +18,25 @@ sendEmail = async ({ email, emailType, userId }) => {
             })
         }
 
-        var transport = nodemailer.createTransport({
-            host: "smtp.mailtrap.io",
-            port: 2525,
+        var transporter = nodemailer.createTransport({
+            service: 'gmail',
+            host: "smtp.gmail.com",
+            port: 587,
             auth: {
                 user: process.env.MAILTRAP_USERID,
                 pass: process.env.MAILTRAP_PASSWORD
             }
         });
 
-        const redirectURL = `${process.env.DOMAIN_URL}/${emailType === "VERIFY" ? 'verify' : 'signup'}`
 
+
+        const redirectURL = `${process.env.DOMAIN_URL}/user/${emailType === "VERIFY" ? 'verify' : 'resetpass'}?token=${hashedToken}`
+console.log(redirectURL)
         const mailOptions = {
-            from: 'swapnil.ai',
+            from: {
+                name: 'SocialApp',
+                address: process.env.MAILTRAP_USERID
+            },
             to: email,
             subject: "Email Verification",
             html: `<body style="font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f4f4f4;">
@@ -53,7 +59,7 @@ sendEmail = async ({ email, emailType, userId }) => {
         </body>`
         }
 
-        const mailResponse = await transport.sendMail(mailOptions)
+        const mailResponse = await transporter.sendMail(mailOptions)
         return mailResponse
     } catch (error) {
         console.log(error.message)
