@@ -16,12 +16,12 @@ const signInValidation = async (req, res, next) => {
 
 const todoValidation = async (req, res, next) => {
     try {
-        await signInSchema.validate(req.body, { abortEarly: false })
+        await todoValidationSchema.validate(req.body, { abortEarly: false })
         next()
     } catch (error) {
         const errors = error.inner.map(err => ({
             field: err.path,
-            message: err.meessage
+            message: err.message
         }))
         return res.status(400).json(new ApiError(400, 'VALIDATION ERROR', 'one or more validation error', errors));
     }

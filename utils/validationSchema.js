@@ -30,10 +30,12 @@ const todoValidationSchema = yup.object().shape({
         .required(),
     description: yup.string()
         .required(),
+    completed: yup.boolean(),
     dueDate: yup.date()
-        .required().max(new Date(new Date().getTime() + (7 * 24 * 60 * 60 * 1000)), "Due date must be within the next seven days"),
+        .required().max(new Date(new Date().getTime() + (30 * 24 * 60 * 60 * 1000)), "Due date must be within the next thirty days"),
     todoCategory: yup.string()
         .required(),
+    priority: yup.string().oneOf(['HIGH', 'MEDIUM', 'LOW'], "Invalid priority (Priority can only be one of 'HIGH', 'MEDIUM' or 'LOW')").default('LOW')
 })
 
 module.exports = {

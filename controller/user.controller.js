@@ -49,16 +49,39 @@ exports.user_signin = async (req, res) => {
         const email = req.email
         const userId = req.userId
         const isVerfied = req.isVerfied
+        const isAdmin = req.isAdmin
         const secret = process.env.JWT_SECRET
         const accessToken = jwt.sign({
             exp: Math.floor(Date.now() / 1000) + (60 * 60),
             id: userId,
             email,
-            isVerfied
+            isVerfied,
+            isAdmin
+
         }, secret
         )
-        res.status(200).json(new ApiResponse(200, 'SUCCESS', { accessToken, email, username }, 'user signed in succesfully'))
+        res.status(200).json(new ApiResponse(200, 'SUCCESS', { accessToken, email, username, isAdmin }, 'user signed in succesfully'))
     } catch (error) {
         res.status(500).json(new ApiError(500, 'INTERNAL SERVER ERROR', 'something went wrong'))
+    }
+}
+
+exports.user_verify = async (req, res) => {
+    try {
+        const userId = req.userId;
+        console.log('User ID:', userId);
+
+        const verifyUser = await User.findByIdAndUpdate(
+            { _id: userId },
+            { isVerified: true },
+            { new: true }
+        ).select('username email isVerified'); // Select the fields you want to return
+        if (!verifyUser) {
+            return res.status(500).json(new ApiError(500, 'INTERNAL SERVER ERROR', 'Failed to verify user.'));
+        }
+        return res.status(200).json(new ApiResponse(200, 'SUCCESS', verifyUser, 'User verified successfully'));
+    } catch (error) {
+        console.error('Error verifying user:', error);
+        return res.status(500).json(new ApiError(500, 'INTERNAL SERVER ERROR', 'Something went wrong during verification.'));
     }
 }

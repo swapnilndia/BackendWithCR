@@ -3,6 +3,7 @@ const { User } = require('../models/user.models')
 const ApiError = require('../utils/ApiError')
 const bcrypt = require('bcrypt')
 const { signUpSchema } = require('../utils/validationSchema')
+const { isVerificationTokenValid } = require('../utils/helperFunction')
 
 
 const signupMiddleware = async (req, res, next) => {
@@ -31,10 +32,36 @@ const signInMiddleware = async (req, res, next) => {
         req.userId = isExistingUser._id
         req.email = isExistingUser.email
         req.isVerified = isExistingUser.isVerified
+        req.isAdmin = isExistingUser.isAdmin
         next()
     } catch (error) {
         return res.status(500).json(new ApiError(500, 'INTERNAL SERVER ERROR', 'Something went wrong, please try again'))
     }
 }
 
-module.exports = { signupMiddleware, signInMiddleware }
+const verifyMiddleware = async (req, res, next) => {
+    try {
+        const token = req.query.token
+        if (!token) {
+            res.status(400).json(new ApiError(400, 'BAD REQUEST', 'Token is missing in the API'))
+        }
+        const findUserWithToken = await User.findOne({ verifyToken: token })
+        if (!findUserWithToken) {
+            res.status(400).json(new ApiError(400, 'BAD REQUEST', 'User not found, with token 1'))
+        }
+        const isValidToken = isVerificationTokenValid(findUserWithToken.verifyTokenExpiry)
+        if (isValidToken) {
+            req.userId = findUserWithToken._id
+            next()
+
+        } else {
+            res.status(400).json(new ApiError(400, 'BAD REQUEST', 'Token expired'))
+        }
+
+
+    } catch (error) {
+        res.status(500).json(new ApiError(500, 'INTERNAL SERVER ERROR', 'Something went wrong 2'))
+    }
+}
+
+module.exports = { signupMiddleware, signInMiddleware, verifyMiddleware }
