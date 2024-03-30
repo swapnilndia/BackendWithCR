@@ -3,6 +3,7 @@ const {
   signInSchema,
   todoValidationSchema,
   expenseValidationSchema,
+  studentDataValidationSchema
 } = require("../utils/validationSchema");
 
 const signInValidation = async (req, res, next) => {
@@ -69,5 +70,26 @@ const expenseTrackerValidation = async (req, res, next) => {
       );
   }
 };
+const studentDataValidation = async (req, res, next) => {
+  try {
+    await studentDataValidationSchema.validate(req.body, { abortEarly: false });
+    next();
+  } catch (error) {
+    const errors = error.inner.map((err) => ({
+      field: err.path,
+      message: err.message,
+    }));
+    return res
+      .status(400)
+      .json(
+        new ApiError(
+          400,
+          "VALIDATION ERROR",
+          "one or more validation error",
+          errors
+        )
+      );
+  }
+};
 
-module.exports = { signInValidation, todoValidation, expenseTrackerValidation };
+module.exports = { signInValidation, todoValidation, expenseTrackerValidation,studentDataValidation };

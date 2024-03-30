@@ -91,29 +91,65 @@ exports.get_Specific_Expense = async (req, res) => {
 
 exports.update_Expense = async (req, res) => {
   try {
-      const { id } = req.params
-      const { expenseID, description, amount, date, location } = req.body
+    const { id } = req.params;
+    const { expenseID, description, amount, date, location } = req.body;
 
-      const updatedExpense = await Expense.findByIdAndUpdate(id, { expenseID, description, amount, date, location }, { new: true })
-     
-      if (!updatedExpense) {
-          return res.status(500).json(new ApiError(500, 'INTERNAL SERVER ERROR', 'Something went wrong'))
-      }
-      res.status(200).json(new ApiResponse(200, 'SUCCESS', updatedExpense, 'Expense updated successfully'))
+    const updatedExpense = await Expense.findByIdAndUpdate(
+      id,
+      { expenseID, description, amount, date, location },
+      { new: true }
+    );
+
+    if (!updatedExpense) {
+      return res
+        .status(500)
+        .json(
+          new ApiError(500, "INTERNAL SERVER ERROR", "Something went wrong")
+        );
+    }
+    res
+      .status(200)
+      .json(
+        new ApiResponse(
+          200,
+          "SUCCESS",
+          updatedExpense,
+          "Expense updated successfully"
+        )
+      );
   } catch (error) {
-      res.status(500).json(new ApiError(500, 'INTERNAL SERVER ERROR', 'Something went wrong'))
+    res
+      .status(500)
+      .json(new ApiError(500, "INTERNAL SERVER ERROR", "Something went wrong"));
   }
-}
+};
 
 exports.delete_Expense = async (req, res) => {
   try {
-      const { id } = req.params
-      const deletedExpense = await Expense.findByIdAndDelete(id)
-      if (!deletedExpense) {
-          return res.status(500).json(new ApiError(500, 'INTERNAL SERVER ERROR', 'Something went wrong 1'))
-      }
-      res.status(200).json(new ApiResponse(200, 'SUCCESS', deletedExpense, 'Expense Deleted successfully'))
+    const { id } = req.params;
+    const deletedExpense = await Expense.findByIdAndDelete(id);
+    if (!deletedExpense) {
+      return res
+        .status(500)
+        .json(
+          new ApiError(500, "INTERNAL SERVER ERROR", "Something went wrong 1")
+        );
+    }
+    res
+      .status(200)
+      .json(
+        new ApiResponse(
+          200,
+          "SUCCESS",
+          deletedExpense,
+          "Expense Deleted successfully"
+        )
+      );
   } catch (error) {
-      res.status(500).json(new ApiError(500, 'INTERNAL SERVER ERROR', 'Something went wrong 2'))
+    res
+      .status(500)
+      .json(
+        new ApiError(500, "INTERNAL SERVER ERROR", "Something went wrong 2")
+      );
   }
-}
+};

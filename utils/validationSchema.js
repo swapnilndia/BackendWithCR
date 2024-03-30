@@ -60,9 +60,24 @@ const expenseValidationSchema = yup.object().shape({
   location: yup.string().required(),
 });
 
+const studentDataValidationSchema = yup.object().shape({
+  firstName: yup.string().required(),
+  lastName: yup.string().required(),
+  email: yup.string().email().required(),
+  DOB: yup
+    .date()
+    .max(new Date(), 'Date of birth cannot be in the future')
+    .required(),
+  studentId: yup
+    .string()
+    .matches(/^S\d{14}$/, 'Student ID must start with "S" followed by 14 digits')
+    .required(),
+});
+
 module.exports = {
   signUpSchema,
   signInSchema,
   todoValidationSchema,
   expenseValidationSchema,
+  studentDataValidationSchema
 };
