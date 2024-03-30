@@ -7,5 +7,5 @@ const { signInValidation } = require('../middleware/validation.middleware')
 
 router.post('/signup', signupMiddleware, userController.user_signup)
 router.post('/signin', signInValidation, signInMiddleware, userController.user_signin)
-router.get('/verify', verifyMiddleware, userController.user_verify)
+router.post('/verify', verifyMiddleware, userController.user_verify)
 module.exports = router

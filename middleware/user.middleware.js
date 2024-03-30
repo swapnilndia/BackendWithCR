@@ -41,7 +41,7 @@ const signInMiddleware = async (req, res, next) => {
 
 const verifyMiddleware = async (req, res, next) => {
     try {
-        const token = req.query.token
+        const { token } = req.body
         if (!token) {
             res.status(400).json(new ApiError(400, 'BAD REQUEST', 'Token is missing in the API'))
         }
