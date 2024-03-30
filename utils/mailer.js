@@ -22,8 +22,8 @@ sendEmail = async ({ email, emailType, userId }) => {
             host: "smtp.gmail.com",
             port: 587,
             auth: {
-                user: process.env.MAILTRAP_USERID,
-                pass: process.env.MAILTRAP_PASSWORD
+                user: process.env.GMAIL_USERID,
+                pass: process.env.GOOGLE_ACCOUNT_PASSWORD
             }
         });
 
@@ -34,7 +34,7 @@ sendEmail = async ({ email, emailType, userId }) => {
         const mailOptions = {
             from: {
                 name: 'SocialApp',
-                address: process.env.MAILTRAP_USERID
+                address: process.env.GMAIL_USERID
             },
             to: email,
             subject: "Email Verification",
