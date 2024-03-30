@@ -5,14 +5,26 @@ const ApiError = require('../utils/ApiError')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const { sendEmail } = require('../utils/mailer')
+const { uploadOnCloudinary } = require('../utils/cloudinary')
 
 exports.user_signup = async (req, res) => {
 
     try {
         const { username, email, password } = req.body;
+        const avatarLocalPath = req.file?.path
+        if (!avatarLocalPath) {
+            return res.status(400).json(new ApiError(400, 'BAD REQUEST', "Avatar is mandatory field"));
+        }
+        const avatar = await uploadOnCloudinary(avatarLocalPath)
+        if (!avatar) {
+            return res.status(400).json(new ApiError(400, 'BAD REQUEST', "Avatar is mandatory field"));
+        }
         const saltOrRounds = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, saltOrRounds);
-        const createUser = await User.create({ username, email, password: hashedPassword });
+
+
+
+        const createUser = await User.create({ username, email, avatar : avatar.url, password: hashedPassword });
         // send verification email 
         await sendEmail({ email, emailType: "VERIFY", userId: createUser._id });
         return res.status(201).json(new ApiResponse(201, 'SUCCESS', { createUser }, 'user created succesfully'));
@@ -35,7 +47,6 @@ exports.user_signup = async (req, res) => {
             return res.status(400).json(new ApiError(400, 'BAD REQUEST', errorMessage));
         } else {
             // For other errors, return a generic error message
-            console.error(error);
             return res.status(500).json(new ApiError(500, 'INTERNAL SERVER ERROR', 'Something went wrong'));
         }
     }
@@ -69,7 +80,6 @@ exports.user_signin = async (req, res) => {
 exports.user_verify = async (req, res) => {
     try {
         const userId = req.userId;
-        console.log('User ID:', userId);
 
         const verifyUser = await User.findByIdAndUpdate(
             { _id: userId },
@@ -81,7 +91,6 @@ exports.user_verify = async (req, res) => {
         }
         return res.status(200).json(new ApiResponse(200, 'SUCCESS', verifyUser, 'User verified successfully'));
     } catch (error) {
-        console.error('Error verifying user:', error);
         return res.status(500).json(new ApiError(500, 'INTERNAL SERVER ERROR', 'Something went wrong during verification.'));
     }
 }

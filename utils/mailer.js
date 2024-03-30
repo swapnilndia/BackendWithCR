@@ -3,7 +3,6 @@ const bcrypt = require('bcrypt')
 const { User } = require('../models/user.models')
 
 sendEmail = async ({ email, emailType, userId }) => {
-    console.log(email, emailType, userId)
     try {
         const hashedToken = await bcrypt.hash(userId.toString(), 10)
         if (emailType === "VERIFY") {
@@ -31,7 +30,7 @@ sendEmail = async ({ email, emailType, userId }) => {
 
 
         const redirectURL = `${process.env.DOMAIN_URL}/user/${emailType === "VERIFY" ? 'verify' : 'resetpass'}?token=${hashedToken}`
-console.log(redirectURL)
+
         const mailOptions = {
             from: {
                 name: 'SocialApp',
@@ -44,6 +43,7 @@ console.log(redirectURL)
             <div style="background-color: #007bff; color: #fff; padding: 20px; text-align: center;">
                 <h1>Email Verification</h1>
             </div>
+            <img src="https://res.cloudinary.com/vistaprint/image/upload/c_scale,w_1349,h_808,dpr_2/f_auto,q_auto/v1705580305/ideas-and-advice-prod/en-us/featured_14223857a51.png?_i=AA" alt="Girl in a jacket" width="500" height="600">
             <div style="background-color: #fff; padding: 30px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
                 <p>Dear ${email},</p>
                 <strong>Thank you for signing up with SocialApp😊!</strong>
