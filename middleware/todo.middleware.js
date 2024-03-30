@@ -24,7 +24,6 @@ const todoMiddleware = (req, res, next) => {
         req.userId = decodedToken.id;
         next();
     } catch (error) {
-        console.error('Error in todoMiddleware:', error);
         res.status(500).json(new ApiError(500, 'INTERNAL SERVER ERROR', 'Something went wrong'));
     }
 }

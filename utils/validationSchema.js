@@ -11,7 +11,7 @@ const signUpSchema = yup.object().shape({
         .required(),
     password: yup.string()
         .required()
-        .min(8, 'Username must name by 8 characters long')
+        .min(8, 'Password must name by 8 characters long')
         .matches(
             /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
             'Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character'

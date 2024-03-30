@@ -35,6 +35,10 @@ exports.get_all_todos = async (req, res) => {
 exports.get_specific_todo = async (req, res) => {
     try {
         const { id } = req.params
+        const isTodoAvailable = await Todo.findById(id)
+        if (!isTodoAvailable) {
+            return res.status(404).json(new ApiError(404, 'Todo Not Found', `Todo with ${id} does not exist in database`))
+        }
         const selectedTodo = await Todo.findById({ _id: id })
         if (!selectedTodo) {
             return res.status(500).json(new ApiError(500, 'INTERNAL SERVER ERROR', 'Something went wrong'))
@@ -49,13 +53,34 @@ exports.update_todo = async (req, res) => {
     try {
         const { id } = req.params
         const { title, description, completed, dueDate, todoCategory, priority } = req.body
+        const isTodoAvailable = await Todo.findById(id)
+        if (!isTodoAvailable) {
+            return res.status(404).json(new ApiError(404, 'Todo Not Found', `Todo with ${id} does not exist in database`))
+        }
         const updatedTodo = await Todo.findByIdAndUpdate(id, { title, description, completed, dueDate, todoCategory, priority }, { new: true })
-        console.log(updatedTodo)
+       
         if (!updatedTodo) {
             return res.status(500).json(new ApiError(500, 'INTERNAL SERVER ERROR', 'Something went wrong'))
         }
         res.status(200).json(new ApiResponse(200, 'SUCCESS', updatedTodo, 'Todo fetched successfully'))
     } catch (error) {
         res.status(500).json(new ApiError(500, 'INTERNAL SERVER ERROR', 'Something went wrong'))
+    }
+}
+
+exports.delete_todo = async (req, res) => {
+    try {
+        const { id } = req.params
+        const isTodoAvailable = await Todo.findById(id)
+        if (!isTodoAvailable) {
+            return res.status(404).json(new ApiError(404, 'Todo Not Found', `Todo with ${id} does not exist in database`))
+        }
+        const deletedTodo = await Todo.findByIdAndDelete(id)
+        if (!deletedTodo) {
+            return res.status(500).json(new ApiError(500, 'INTERNAL SERVER ERROR', 'Something went wrong 1'))
+        }
+        res.status(200).json(new ApiResponse(200, 'SUCCESS', deletedTodo, 'Todo Deleted successfully'))
+    } catch (error) {
+        res.status(500).json(new ApiError(500, 'INTERNAL SERVER ERROR', 'Something went wrong 2'))
     }
 }

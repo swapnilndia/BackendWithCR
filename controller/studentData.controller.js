@@ -24,7 +24,6 @@ exports.create_studentData = async (req, res) => {
         return res.status(500).json({msg:'Failed to create student data'})
     }
   } catch (error) {
-    console.error('Error in create_todo controller:', error);
         return res.status(500).json({ msg: 'Something went wrong' });
   }
 };
@@ -39,7 +38,6 @@ exports.get_all_studentsData=  async(req,res)=>{
     }
     res.status(200).json(new ApiResponse(200, listOfTodos, 'StudentsData  fetched successfully'))
   }catch(error){
-    console.log(error)
     res.status(500).json({ mess: 'something went wrong' })
   }
 }

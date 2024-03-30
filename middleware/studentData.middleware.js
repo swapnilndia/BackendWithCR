@@ -27,7 +27,6 @@ req.userId = decodedToken.id
 next()
 
 }catch(error){
-    console.error('Error in todoMiddleware:', error);
     res.status(500).json({ msg: 'Something went wrong' });
 }
 
