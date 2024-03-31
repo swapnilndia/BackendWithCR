@@ -5,7 +5,7 @@ const { signupMiddleware, signInMiddleware, verifyMiddleware } = require('../mid
 const { signInValidation } = require('../middleware/validation.middleware')
 const { upload } = require('../middleware/multer.middleware')
 
-router.post('/signup', upload.single('avatar'), signupMiddleware, userController.user_signup)
+router.post('/signup', signupMiddleware, userController.user_signup)
 router.post('/signin', signInValidation, signInMiddleware, userController.user_signin)
 router.post('/verify', verifyMiddleware, userController.user_verify)
 module.exports = router

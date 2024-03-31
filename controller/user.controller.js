@@ -11,11 +11,7 @@ exports.user_signup = async (req, res) => {
 
     try {
         const { username, email, password } = req.body;
-        const avatarLocalPath = req.file?.path
-        if (!avatarLocalPath) {
-            return res.status(400).json(new ApiError(400, 'BAD REQUEST', "Avatar is mandatory field"));
-        }
-        const avatar = await uploadOnCloudinary(avatarLocalPath)
+
         if (!avatar) {
             return res.status(400).json(new ApiError(400, 'BAD REQUEST', "Avatar is mandatory field"));
         }
@@ -24,7 +20,7 @@ exports.user_signup = async (req, res) => {
 
 
 
-        const createUser = await User.create({ username, email, avatar : avatar.url, password: hashedPassword });
+        const createUser = await User.create({ username, email, password: hashedPassword });
         // send verification email 
         await sendEmail({ email, emailType: "VERIFY", userId: createUser._id });
         return res.status(201).json(new ApiResponse(201, 'SUCCESS', { createUser }, 'user created succesfully'));
