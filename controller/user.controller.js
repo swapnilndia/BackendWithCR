@@ -65,7 +65,6 @@ exports.user_signin = async (req, res) => {
         res.status(500).json(new ApiError(500, 'INTERNAL SERVER ERROR', 'something went wrong'))
     }
 }
-
 exports.user_verify = async (req, res) => {
     try {
         const userId = req.userId;
@@ -78,11 +77,14 @@ exports.user_verify = async (req, res) => {
         if (!verifyUser) {
             return res.status(404).json(new ApiError(404, 'NOT FOUND', 'User is not found in Database'));
         }
-        return res.status(200).json(new ApiResponse(200, 'SUCCESS', verifyUser, 'User verified successfully')).redirect('http://localhost:5001/login');
+
+        // Return JSON response after successful verification
+        return res.status(200).json(new ApiResponse(200, 'SUCCESS', verifyUser, 'User verified successfully'));
     } catch (error) {
         return res.status(500).json(new ApiError(500, 'INTERNAL SERVER ERROR', 'Something went wrong during verification.'));
     }
 }
+
 
 exports.user_forgot_password = (req, res) => {
     console.log(req)

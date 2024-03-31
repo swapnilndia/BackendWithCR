@@ -43,25 +43,23 @@ const verifyMiddleware = async (req, res, next) => {
     try {
         const { token } = req.body
         if (!token) {
-            res.status(400).json(new ApiError(400, 'BAD REQUEST', 'Token is missing in the API'))
+            return res.status(400).json(new ApiError(400, 'BAD REQUEST', 'Token is missing in the API'))
         }
         const findUserWithToken = await User.findOne({ verifyToken: token })
         if (!findUserWithToken) {
-            res.status(400).json(new ApiError(400, 'BAD REQUEST', 'User not found, with token 1'))
+            return res.status(400).json(new ApiError(400, 'BAD REQUEST', 'User not found, with token 1'))
         }
         const isValidToken = isVerificationTokenValid(findUserWithToken.verifyTokenExpiry)
         if (isValidToken) {
             req.userId = findUserWithToken._id
             next()
-
         } else {
-            res.status(400).json(new ApiError(400, 'BAD REQUEST', 'Token expired'))
+            return res.status(400).json(new ApiError(400, 'BAD REQUEST', 'Token expired'))
         }
-
-
     } catch (error) {
-        res.status(500).json(new ApiError(500, 'INTERNAL SERVER ERROR', 'Something went wrong 2'))
+        return res.status(500).json(new ApiError(500, 'INTERNAL SERVER ERROR', 'Something went wrong 2'))
     }
 }
+
 
 module.exports = { signupMiddleware, signInMiddleware, verifyMiddleware }
