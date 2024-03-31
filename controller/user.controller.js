@@ -11,15 +11,8 @@ exports.user_signup = async (req, res) => {
 
     try {
         const { username, email, password } = req.body;
-
-        if (!avatar) {
-            return res.status(400).json(new ApiError(400, 'BAD REQUEST', "Avatar is mandatory field"));
-        }
         const saltOrRounds = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, saltOrRounds);
-
-
-
         const createUser = await User.create({ username, email, password: hashedPassword });
         // send verification email 
         await sendEmail({ email, emailType: "VERIFY", userId: createUser._id });
