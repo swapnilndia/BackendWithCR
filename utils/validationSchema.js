@@ -72,6 +72,25 @@ const studentDataValidationSchema = yup.object().shape({
     .string()
     .matches(/^S\d{14}$/, 'Student ID must start with "S" followed by 14 digits')
     .required(),
+  address: yup.object().shape({
+    street: yup.string().required(),
+    city: yup.string().required(),
+    state: yup.string().required(),
+    postalCode: yup.string().required(),
+  }),
+  gender: yup.string().required(),
+  contactNumber: yup.string().required(),
+  guardian: yup.object().shape({
+    name: yup.string().required(),
+    contactNumber: yup.string().required(),
+  }),
+  class: yup.string().required(),
+  section: yup.string().required(),
+  admissionDate: yup.date().required(),
+  feesInformation: yup.object().shape({
+    totalFees: yup.number().required(),
+    paymentStatus: yup.string().required(),
+  }),
 });
 
 module.exports = {
