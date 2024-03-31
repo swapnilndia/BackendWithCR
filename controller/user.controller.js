@@ -26,7 +26,7 @@ exports.user_signup = async (req, res) => {
 
         const createUser = await User.create({ username, email, avatar : avatar.url, password: hashedPassword });
         // send verification email 
-        // await sendEmail({ email, emailType: "VERIFY", userId: createUser._id });
+        await sendEmail({ email, emailType: "VERIFY", userId: createUser._id });
         return res.status(201).json(new ApiResponse(201, 'SUCCESS', { createUser }, 'user created succesfully'));
     } catch (error) {
         if (error.name === 'MongoServerError' && error.code === 11000) {
