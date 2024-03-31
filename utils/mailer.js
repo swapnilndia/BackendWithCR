@@ -29,7 +29,7 @@ sendEmail = async ({ email, emailType, userId }) => {
 
 
 
-        const redirectURL = `${process.env.DOMAIN_URL}/user/${emailType === "VERIFY" ? 'verify' : 'resetpass'}?token=${hashedToken}`
+        const redirectURL = `http://localhost:5001/user/${emailType === "VERIFY" ? 'verify' : 'resetpass'}?token=${hashedToken}`
 
         const mailOptions = {
             from: {
