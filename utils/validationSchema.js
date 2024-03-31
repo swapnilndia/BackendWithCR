@@ -25,6 +25,37 @@ const signInSchema = yup.object().shape({
   password: yup.string().required(),
 });
 
+const forgotPasswordSchema = yup.object().shape({
+  username: yup.string().required(),
+  email: yup.string().required(),
+});
+
+const resetPasswordSchema = yup.object().shape({
+  password: yup
+    .string()
+    .required()
+    .min(8, "Password must be at least 8 characters long")
+    .matches(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+      "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
+    ),
+  confirmPassword: yup.string().oneOf([yup.ref('password'), null], 'Passwords must match')
+});
+
+const changePasswordSchema = yup.object().shape({
+  oldPassword: yup.string().required(),
+  newPassword: yup
+    .string()
+    .required()
+    .min(8, "Password must be at least 8 characters long")
+    .matches(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+      "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
+    ),
+  confirmNewPassword: yup.string().oneOf([yup.ref('password'), null], 'Passwords must match')
+});
+
+
 const todoValidationSchema = yup.object().shape({
   title: yup.string().required(),
   description: yup.string().required(),
@@ -77,6 +108,9 @@ const studentDataValidationSchema = yup.object().shape({
 module.exports = {
   signUpSchema,
   signInSchema,
+  forgotPasswordSchema,
+  resetPasswordSchema,
+  changePasswordSchema,
   todoValidationSchema,
   expenseValidationSchema,
   studentDataValidationSchema

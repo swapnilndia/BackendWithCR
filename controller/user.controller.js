@@ -76,10 +76,22 @@ exports.user_verify = async (req, res) => {
             { new: true }
         ).select('username email isVerified'); // Select the fields you want to return
         if (!verifyUser) {
-            return res.status(500).json(new ApiError(500, 'INTERNAL SERVER ERROR', 'Failed to verify user.'));
+            return res.status(404).json(new ApiError(404, 'NOT FOUND', 'User is not found in Database'));
         }
-        return res.status(200).json(new ApiResponse(200, 'SUCCESS', verifyUser, 'User verified successfully'));
+        return res.status(200).json(new ApiResponse(200, 'SUCCESS', verifyUser, 'User verified successfully')).redirect('http://localhost:5001/login');
     } catch (error) {
         return res.status(500).json(new ApiError(500, 'INTERNAL SERVER ERROR', 'Something went wrong during verification.'));
     }
 }
+
+exports.user_forgot_password = (req, res) => {
+    console.log(req)
+}
+
+exports.user_reset_password = (req, res) => {
+    console.log(req)
+}
+exports.user_change_password = (req, res) => {
+    console.log(req)
+}
+
