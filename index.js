@@ -1,7 +1,9 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
+const corsOptions = require('./config/corsOptions')
 require('dotenv').config()
+
 
 const todoRouter = require('./route/todo.route')
 const userRouter = require('./route/user.route')
@@ -11,7 +13,7 @@ const studentRouter = require('./route/studentData.route')
 const app = express()
 
 app.use(bodyParser.json())
-app.use(cors())
+app.use(cors(corsOptions))
 
 const PORT = process.env.PORT || 3000 // Setting a default port if PORT environment variable is not set
 
