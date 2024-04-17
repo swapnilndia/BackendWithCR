@@ -7,24 +7,52 @@ const jwt = require("jsonwebtoken");
 
 exports.create_studentData = async (req, res) => {
   try {
-    const { firstName, lastName, email, DOB, studentId } = req.body;
+    const { 
+      firstName, 
+      lastName, 
+      email, 
+      DOB, 
+      studentId, 
+      address, 
+      gender, 
+      contactNumber, 
+      guardian,
+      class: studentClass, 
+      section, 
+      admissionDate, 
+      feesInformation 
+    } = req.body;
+    
+    // Check if studentId already exists
+    const existingStudent = await StudentData.findOne({ studentId });
+    if (existingStudent) {
+      return res.status(400).json({ message: "Student ID already exists" });
+    }
+
     const userId = req.userId;
-    const createStudenData = await StudentData.create({
+    
+    const createStudentData = await StudentData.create({
       firstName,
       lastName,
       email,
       DOB,
       studentId,
+      address,
+      gender,
+      contactNumber,
+      guardian,
+      class: studentClass,
+      section,
+      admissionDate,
+      feesInformation,
       createdBy: userId,
     });
 
-    if (createStudenData) {
-      return res
-        .status(200)
-        .json({
-          msg: "Student data created successfully",
-          data: createStudenData,
-        });
+    if (createStudentData) {
+      return res.status(200).json({
+        msg: "Student data created successfully",
+        data: createStudentData,
+      });
     } else {
       return res.status(500).json({ msg: "Failed to create student data" });
     }
@@ -32,6 +60,7 @@ exports.create_studentData = async (req, res) => {
     return res.status(500).json({ msg: "Something went wrong" });
   }
 };
+
 
 exports.get_all_studentsData = async (req, res) => {
   try {
@@ -82,40 +111,65 @@ exports.get_Specific_StudentData = async (req, res) => {
   }
 };
 
-exports.update_StudentData= async (req, res) => {
+exports.update_StudentData = async (req, res) => {
   try {
     const { id } = req.params;
-    const { firstName, lastName, email, DOB, studentId } = req.body;
+    const { 
+      firstName, 
+      lastName, 
+      email, 
+      DOB, 
+      studentId,
+      address, 
+      gender, 
+      contactNumber, 
+      guardian,
+      class: studentClass, 
+      section, 
+      admissionDate, 
+      feesInformation 
+    } = req.body;
 
     const updatedStudentData = await StudentData.findByIdAndUpdate(
       id,
-      { firstName, lastName, email, DOB, studentId },
+      {
+        firstName, 
+        lastName, 
+        email, 
+        DOB, 
+        studentId,
+        address, 
+        gender, 
+        contactNumber, 
+        guardian,
+        class: studentClass, 
+        section, 
+        admissionDate, 
+        feesInformation 
+      },
       { new: true }
     );
 
     if (!updatedStudentData) {
-      return res
-        .status(500)
-        .json(
-          new ApiError(500, "INTERNAL SERVER ERROR", "Something went wrong")
-        );
+      return res.status(500).json({
+        message: "Something went wrong",
+        error: "INTERNAL_SERVER_ERROR"
+      });
     }
-    res
-      .status(200)
-      .json(
-        new ApiResponse(
-          200,
-          "SUCCESS",
-          updatedStudentData,
-          "Student data updated successfully"
-        )
-      );
+    
+    res.status(200).json({
+      message: "Student data updated successfully",
+      data: updatedStudentData,
+      status: "SUCCESS"
+    });
   } catch (error) {
-    res
-      .status(500)
-      .json(new ApiError(500, "INTERNAL SERVER ERROR", "Something went wrong"));
+    res.status(500).json({
+      message: "Something went wrong",
+      error: "INTERNAL_SERVER_ERROR"
+    });
   }
 };
+
 
 
 exports.delete_StudentData = async (req, res) => {

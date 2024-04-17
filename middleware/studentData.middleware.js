@@ -1,6 +1,6 @@
-const {User} = require('./user.middleware')
+
 const jwt = require('jsonwebtoken')
-const bcrypt = require('bcrypt')
+
 function isAccessTokenExpired(expirationTimestamp) {
     // Get current time in UTC seconds
     const currentTime = Math.floor(Date.now() / 1000);
