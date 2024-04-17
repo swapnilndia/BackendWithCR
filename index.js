@@ -23,7 +23,7 @@ app.use('/expense', expenseRouter)
 app.use('/studentdata', studentRouter)
 
 app.get('/', async (req, res) => {
-    res.send('<h1>Hi Guys,</h1>')
+    res.send('<h1>Hi Guys,44</h1>')
 })
 
 app.listen(PORT, () => {
