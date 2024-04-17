@@ -14,7 +14,7 @@ const app = express()
 
 app.use(bodyParser.json())
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: '*',
 }));
 
 const PORT = process.env.PORT || 3000 // Setting a default port if PORT environment variable is not set
