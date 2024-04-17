@@ -13,7 +13,9 @@ const studentRouter = require('./route/studentData.route')
 const app = express()
 
 app.use(bodyParser.json())
-app.use(cors(corsOptions))
+app.use(cors({
+    origin: ['https://backend-with-cr.vercel.app/'],
+  }));
 
 const PORT = process.env.PORT || 3000 // Setting a default port if PORT environment variable is not set
 
